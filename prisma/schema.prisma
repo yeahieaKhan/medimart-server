@@ -22,18 +22,156 @@ datasource db {
   provider = "postgresql"
 }
 
-model User { 
-  id    Int     @id @default(autoincrement()) 
-  email String  @unique
-  name  String?
-  posts Post[]
-} 
 
-model Post { 
-  id        Int     @id @default(autoincrement()) 
-  title     String
-  content   String?
-  published Boolean @default(false) 
-  author    User    @relation(fields: [authorId], references: [id]) 
-  authorId  Int
-} 
+
+
+
+model User {
+  id          String    @id @default(uuid())
+
+  name        String
+  email       String    @unique
+  password    String
+
+  phone       String?
+  address     String?
+  image       String?
+
+  role        Role      @default(customer)
+
+  isBlocked   Boolean   @default(false)
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  medicines   Medicine[]
+  orders      Order[]
+  reviews     Review[]
+}
+
+model Category {
+  id          String      @id @default(uuid())
+
+  name        String      @unique
+  image       String?
+
+  createdAt   DateTime    @default(now())
+
+  // Relations
+  medicines   Medicine[]
+}
+
+model Medicine {
+  id              String      @id @default(uuid())
+
+  name            String
+  slug            String      @unique
+
+  description     String
+
+  price           Float
+  stock           Int
+
+  manufacturer    String
+
+  dosage          String?
+  expiryDate      DateTime?
+
+ 
+
+  requiresPrescription Boolean @default(false)
+
+  discount        Float?      @default(0)
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  // Foreign Keys
+  sellerId        String
+  categoryId      String
+
+  // Relations
+  seller          User        @relation(fields: [sellerId], references: [id])
+
+  category        Category    @relation(fields: [categoryId], references: [id])
+
+  reviews         Review[]
+  orderItems      OrderItem[]
+}
+
+
+
+model Order {
+  id                String        @id @default(uuid())
+
+  totalPrice        Float
+
+  shippingAddress   String
+  phoneNumber       String
+
+  status            OrderStatus   @default(pending)
+
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  // Foreign Key
+  customerId        String
+
+  // Relations
+  customer          User          @relation(fields: [customerId], references: [id])
+
+  items             OrderItem[]
+}
+
+model OrderItem {
+  id              String      @id @default(uuid())
+
+  quantity        Int
+  price           Float
+
+  // Foreign Keys
+  orderId         String
+  medicineId      String
+
+  // Relations
+  order           Order       @relation(fields: [orderId], references: [id])
+
+  medicine        Medicine    @relation(fields: [medicineId], references: [id])
+}
+
+model Review {
+  id              String      @id @default(uuid())
+
+  rating          Int
+  comment         String
+
+  createdAt       DateTime    @default(now())
+
+  // Foreign Keys
+  userId          String
+  medicineId      String
+
+  // Relations
+  user            User        @relation(fields: [userId], references: [id])
+
+  medicine        Medicine    @relation(fields: [medicineId], references: [id])
+}
+
+
+
+enum Role {
+  customer
+  seller
+  admin
+}
+
+
+
+enum OrderStatus {
+  pending
+  processing
+  shipped
+  delivery
+  canceled
+}
