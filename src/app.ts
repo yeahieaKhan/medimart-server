@@ -59,4 +59,5 @@ app.use(express.json());
 // });
 
 app.use("/", UserRoutes);
+
 export default app;
