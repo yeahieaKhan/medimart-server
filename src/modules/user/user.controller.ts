@@ -14,6 +14,20 @@ const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
+const getSingleUser = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+    const result = await UserService.getSingleUserService(id as string);
+    res.json(result);
+    console.log("result form controoller", result);
+  } catch (error) {
+    res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
+};
+
 const createUser = async (req: Request, res: Response) => {
   try {
     const user = await UserService.createUser(req.body);
@@ -29,8 +43,29 @@ const createUser = async (req: Request, res: Response) => {
     });
   }
 };
+const updateUserController = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const user = await UserService.updateUser(id as string, req.body);
+
+    res.status(200).json({
+      success: true,
+      message: "User updated successfully",
+      data: user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to update user",
+      error,
+    });
+  }
+};
 
 export const UserController = {
   getAllUsers,
   createUser,
+  updateUserController,
+  getSingleUser,
 };

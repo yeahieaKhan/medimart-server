@@ -18,7 +18,39 @@ const createUser = async (payload: {
   return user;
 };
 
+const updateUser = async (
+  id: string,
+  payload: {
+    name?: string;
+    password?: string;
+  },
+) => {
+  const result = await prisma.user.update({
+    where: {
+      id,
+    },
+    data: payload,
+  });
+  return result;
+};
+
+const getSingleUserService = async (id: string) => {
+  console.log("get id from service", id);
+  const result = await prisma.user.findUnique({
+    where: { id },
+  });
+  console.log("result form service", result);
+
+  if (!result) {
+    throw new Error("User not found");
+  }
+
+  return result;
+};
+
 export const UserService = {
   getAllUsers,
   createUser,
+  updateUser,
+  getSingleUserService,
 };
