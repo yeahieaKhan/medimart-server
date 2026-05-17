@@ -48,9 +48,20 @@ const getSingleUserService = async (id: string) => {
   return result;
 };
 
+const deleteUser = async (id: string) => {
+  const result = await prisma.user.delete({
+    where: {
+      id,
+    },
+  });
+
+  return result;
+};
+
 export const UserService = {
   getAllUsers,
   createUser,
   updateUser,
   getSingleUserService,
+  deleteUser,
 };
