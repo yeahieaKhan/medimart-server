@@ -5,6 +5,15 @@ const getAllMedicineService = async () => {
   return result;
 };
 
+const getSingleMedicine = async (id: string) => {
+  const result = await prisma.medicine.findUnique({
+    where: {
+      id,
+    },
+  });
+  return result;
+};
+
 const createMedicine = async (payload: {
   name: string;
   slug: string;
@@ -46,4 +55,5 @@ const createMedicine = async (payload: {
 export const MedicineService = {
   createMedicine,
   getAllMedicineService,
+  getSingleMedicine,
 };

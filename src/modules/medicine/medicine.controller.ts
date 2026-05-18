@@ -26,6 +26,21 @@ const getAllMedicine = async (req: Request, res: Response) => {
   }
 };
 
+// get single medicine
+
+const getSingleMedicineC = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const result = await MedicineService.getSingleMedicine(id as string);
+    res.json(result);
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
+
 const createMedicine = async (req: Request, res: Response) => {
   try {
     const result = await MedicineService.createMedicine(req.body);
@@ -47,4 +62,5 @@ const createMedicine = async (req: Request, res: Response) => {
 export const MedicineController = {
   createMedicine,
   getAllMedicine,
+  getSingleMedicineC,
 };
