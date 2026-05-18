@@ -3,6 +3,7 @@ import cors from "cors";
 import { prisma } from "./lib/prisma";
 import { UserRoutes } from "./modules/user/user.router";
 import { MedicineRouter } from "./modules/medicine/medicine.router";
+import { OrderRouter } from "./modules/order/order.router";
 
 const app = express();
 
@@ -61,5 +62,6 @@ app.use(express.json());
 
 app.use("/", UserRoutes);
 app.use("/", MedicineRouter);
+app.use("/", OrderRouter);
 
 export default app;
