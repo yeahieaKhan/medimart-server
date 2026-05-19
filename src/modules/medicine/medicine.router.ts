@@ -6,5 +6,6 @@ const router = express.Router();
 router.post("/medicine", MedicineController.createMedicine);
 router.get("/medicine", MedicineController.getAllMedicine);
 router.get("/medicine/:id", MedicineController.getSingleMedicineC);
+router.put("/medicine/:id", MedicineController.updateMedicine);
 
 export const MedicineRouter = router;

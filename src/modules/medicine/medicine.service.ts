@@ -1,3 +1,4 @@
+import { IUpdateMedicine } from "../../../type/medicine.interface";
 import { prisma } from "../../lib/prisma";
 
 const getAllMedicineService = async () => {
@@ -52,8 +53,48 @@ const createMedicine = async (payload: {
 
 // get single medicine
 
+const updateMedicine = async (id: string, payload: IUpdateMedicine) => {
+  // Check medicine exists
+  const existingMedicine = await prisma.medicine.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!existingMedicine) {
+    throw new Error("Medicine not found");
+  }
+
+  // Check duplicate slug
+  if (payload.slug) {
+    const slugExists = await prisma.medicine.findFirst({
+      where: {
+        slug: payload.slug,
+        NOT: {
+          id,
+        },
+      },
+    });
+
+    if (slugExists) {
+      throw new Error("Slug already exists");
+    }
+  }
+
+  // Update medicine
+  const result = await prisma.medicine.update({
+    where: {
+      id,
+    },
+    data: payload,
+  });
+
+  return result;
+};
+
 export const MedicineService = {
   createMedicine,
   getAllMedicineService,
   getSingleMedicine,
+  updateMedicine,
 };
