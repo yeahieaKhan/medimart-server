@@ -92,9 +92,48 @@ const updateMedicine = async (id: string, payload: IUpdateMedicine) => {
   return result;
 };
 
+// delete api
+
+const deleteMedicine = async (id: string) => {
+  const medicine = await prisma.medicine.findUnique({
+    where: { id },
+  });
+
+  if (!medicine) {
+    throw new Error("Medicine not found");
+  }
+
+  return await prisma.medicine.delete({
+    where: { id },
+  });
+};
+
+//
+
+const updateOrderStatus = async (id: string, status: string) => {
+  const order = await prisma.order.findUnique({
+    where: { id },
+  });
+
+  if (!order) {
+    throw new Error("Order not found");
+  }
+
+  // update status
+  const result = await prisma.order.update({
+    where: { id },
+    data: {
+      status,
+    },
+  });
+
+  return result;
+};
+
 export const MedicineService = {
   createMedicine,
   getAllMedicineService,
   getSingleMedicine,
   updateMedicine,
+  deleteMedicine,
 };

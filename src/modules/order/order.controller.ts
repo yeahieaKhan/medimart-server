@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { OrderService } from "./order.service";
+import { UserService } from "../user/user.service";
 
 const createOrder = async (req: Request, res: Response) => {
   try {
@@ -58,10 +59,29 @@ const getSingleOrder = async (req: Request, res: Response) => {
   }
 };
 
-export default getSingleOrder;
+const updateSellerStatus = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const result = await OrderService.updateSellerStatus(id as string, status);
+
+    res.status(200).json({
+      success: true,
+      message: "Seller status updated successfully",
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: (error as Error).message || "Failed to update seller status",
+    });
+  }
+};
 
 export const OrderController = {
   createOrder,
   getAllOrders,
   getSingleOrder,
+  updateSellerStatus,
 };

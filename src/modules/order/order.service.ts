@@ -101,8 +101,20 @@ const createOrder = async (payload: any) => {
   return result;
 };
 
+const updateSellerStatus = async (id: string, status: string) => {
+  const result = await prisma.user.update({
+    where: { id },
+    data: {
+      status,
+    },
+  });
+
+  return result;
+};
+
 export const OrderService = {
   createOrder,
   getAllOrders,
   getSingleORder,
+  updateSellerStatus,
 };

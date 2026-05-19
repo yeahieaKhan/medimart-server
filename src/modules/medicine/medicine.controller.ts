@@ -78,9 +78,29 @@ const updateMedicine = async (req: Request, res: Response) => {
   }
 };
 
+const deleteMedicine = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const result = await MedicineService.deleteMedicine(id as string);
+
+    res.status(200).json({
+      success: true,
+      message: "Medicine deleted successfully",
+      data: result,
+    });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      message: (error as Error).message || "Failed to delete medicine",
+    });
+  }
+};
+
 export const MedicineController = {
   createMedicine,
   getAllMedicine,
   getSingleMedicineC,
   updateMedicine,
+  deleteMedicine,
 };
