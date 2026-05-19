@@ -1,5 +1,32 @@
 import { prisma } from "../../lib/prisma";
 
+const getAllOrders = async () => {
+  const result = await prisma.order.findMany({
+    include: {
+      customer: true,
+      items: {
+        include: {
+          medicine: true,
+        },
+      },
+    },
+  });
+
+  return result;
+};
+
+// get single order
+
+const getSingleORder = async (id: string) => {
+  console.log(id);
+  const result = await prisma.order.findUnique({
+    where: {
+      id,
+    },
+  });
+  return result;
+};
+
 const createOrder = async (payload: any) => {
   const { customerId, shippingAddress, phoneNumber, items } = payload;
 
@@ -74,22 +101,8 @@ const createOrder = async (payload: any) => {
   return result;
 };
 
-const getAllOrders = async () => {
-  const result = await prisma.order.findMany({
-    include: {
-      customer: true,
-      items: {
-        include: {
-          medicine: true,
-        },
-      },
-    },
-  });
-
-  return result;
-};
-
 export const OrderService = {
   createOrder,
   getAllOrders,
+  getSingleORder,
 };

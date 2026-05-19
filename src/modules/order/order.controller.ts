@@ -34,7 +34,34 @@ const getAllOrders = async (req: Request, res: Response) => {
   }
 };
 
+const getSingleOrder = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    console.log("Id from controller:", id);
+
+    const result = await OrderService.getSingleORder(id as string);
+
+    res.status(200).json({
+      success: true,
+      message: "Single order fetched successfully",
+      data: result,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+      data: error,
+    });
+  }
+};
+
+export default getSingleOrder;
+
 export const OrderController = {
   createOrder,
   getAllOrders,
+  getSingleOrder,
 };
